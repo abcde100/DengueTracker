@@ -158,14 +158,7 @@
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
     }
 
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 1rem;
-      color: #d0d0d0;
-    }
-
-    input, select, button {
+    select, input, button {
       width: 100%;
       padding: 0.5rem;
       margin-top: 0.5rem;
@@ -175,27 +168,9 @@
       color: #e0e0e0;
     }
 
-    input::placeholder {
-      color: #888;
-    }
-
     select option {
       background-color: #2b2b2b;
       color: #e0e0e0;
-    }
-
-    #mainPage button {
-      background-color: #3a3a3a;
-      color: #f5f5f5;
-      border: none;
-      cursor: pointer;
-      margin-top: 1.5rem;
-      font-size: 1rem;
-      transition: background-color 0.3s ease;
-    }
-
-    #mainPage button:hover {
-      background-color: #555;
     }
 
     #result {
@@ -203,7 +178,6 @@
       padding: 1rem;
       border-radius: 4px;
       display: none;
-      color: #1e1e1e;
     }
 
     .error {
@@ -276,13 +250,17 @@
       <input type="text" id="location" placeholder="Enter your location" />
 
       <label for="symptoms">Select symptoms you have:</label>
-      <select id="symptoms" multiple size="5">
+      <select id="symptoms" multiple size="7" onchange="handleNoneOption()">
+        <option value="none">None</option>
         <option value="fever">High Fever</option>
         <option value="headache">Severe Headache</option>
         <option value="pain">Pain behind eyes</option>
         <option value="rash">Skin Rash</option>
         <option value="bleed">Bleeding (nose or gums)</option>
+        <option value="other">Other (specify below)</option>
       </select>
+
+      <input type="text" id="otherSymptom" placeholder="If other, please specify..." style="display:none;" />
 
       <button onclick="checkDengue()">Check Dengue Risk</button>
       <div id="result"></div>
@@ -307,9 +285,31 @@
       document.getElementById("mainPage").style.display = "block";
     }
 
+    function handleNoneOption() {
+      const select = document.getElementById('symptoms');
+      const noneOption = select.options[0];
+      const otherInput = document.getElementById('otherSymptom');
+      const otherOption = [...select.options].find(opt => opt.value === 'other');
+
+      if (noneOption.selected) {
+        for (let i = 1; i < select.options.length; i++) {
+          select.options[i].selected = false;
+        }
+      }
+
+      // Show/hide "Other" input field
+      if (otherOption.selected) {
+        otherInput.style.display = 'block';
+      } else {
+        otherInput.style.display = 'none';
+        otherInput.value = '';
+      }
+    }
+
     function checkDengue() {
       const location = document.getElementById('location').value.trim();
       const symptomsSelect = document.getElementById('symptoms');
+      const otherSymptom = document.getElementById('otherSymptom').value.trim();
       const selectedSymptoms = [...symptomsSelect.options]
         .filter(option => option.selected)
         .map(option => option.value);
@@ -331,7 +331,13 @@
         return;
       }
 
-      if (selectedSymptoms.length >= 3) {
+      if (selectedSymptoms.includes('none')) {
+        resultDiv.classList.add('success');
+        resultDiv.textContent = `✔️ You reported no dengue symptoms. Stay safe and keep monitoring your health. Location: ${location}`;
+      } else if (selectedSymptoms.includes('other') && !otherSymptom) {
+        resultDiv.classList.add('error');
+        resultDiv.textContent = 'Please specify your other symptom.';
+      } else if (selectedSymptoms.length >= 3) {
         resultDiv.classList.add('warning');
         resultDiv.textContent = `⚠️ You exhibit several dengue symptoms. Please consult a healthcare professional immediately. Location: ${location}`;
       } else {
