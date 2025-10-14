@@ -4,8 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dengue Tracker</title>
+
+  <!-- Leaflet CSS for demo heat map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
   <style>
-    /* ===== GLOBAL DARK THEME ===== */
+    /* ===== GLOBAL DARK THEME (keeps your original look) ===== */
     body {
       margin: 0;
       padding: 0;
@@ -15,8 +19,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: flex-start;
+      min-height: 100vh;
       box-sizing: border-box;
     }
 
@@ -34,6 +38,7 @@
       text-transform: uppercase;
       box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
       user-select: none;
+      z-index: 50;
     }
 
     .container {
@@ -43,6 +48,7 @@
       box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
       width: 340px;
       animation: fadeIn 0.6s ease;
+      margin-top: 4.2rem; /* place container below header */
     }
 
     h2 {
@@ -59,7 +65,11 @@
       color: #ccc;
     }
 
-    input {
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    select,
+    button {
       width: 100%;
       padding: 0.7rem;
       margin-top: 0.4rem;
@@ -77,13 +87,9 @@
       box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
     }
 
-    input::placeholder {
-      color: #777;
-    }
-
     button {
       width: 100%;
-      margin-top: 1.5rem;
+      margin-top: 1.2rem;
       padding: 0.8rem;
       border-radius: 8px;
       border: none;
@@ -92,13 +98,9 @@
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      transition: background-color 0.18s ease, transform 0.12s ease;
     }
-
-    button:hover {
-      background-color: #3a3a3a;
-      transform: translateY(-2px);
-    }
+    button:hover { background-color: #3a3a3a; transform: translateY(-2px); }
 
     .toggle {
       text-align: center;
@@ -107,37 +109,24 @@
       color: #aaa;
     }
 
-    .toggle span {
-      color: #fff;
-      cursor: pointer;
-      font-weight: bold;
-      text-decoration: underline;
-    }
-
-    .toggle span:hover {
-      color: #ccc;
-    }
+    .toggle span { color: #fff; cursor: pointer; font-weight: bold; text-decoration: underline; }
+    .toggle span:hover { color: #ccc; }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ===== MAIN APP PAGE ===== */
     #mainPage {
       display: none;
       width: 100%;
-      height: 100vh;
+      min-height: 100vh;
       background-color: #121212;
       color: #e0e0e0;
       padding: 0;
       box-sizing: border-box;
+      padding-top: 4.6rem; /* leave space for header */
     }
 
     #mainPage header {
@@ -158,50 +147,82 @@
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
     }
 
-    select, input, button {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      border-radius: 4px;
-      border: 1px solid #444;
-      background-color: #2b2b2b;
-      color: #e0e0e0;
-    }
-
-    select option {
-      background-color: #2b2b2b;
-      color: #e0e0e0;
-    }
-
+    /* Result boxes */
     #result {
       margin-top: 2rem;
       padding: 1rem;
-      border-radius: 4px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+      transition: background-color 0.3s ease;
+    }
+    .result-safe { background-color: #1b5e20; color: #c8e6c9; border: 1px solid #66bb6a; }
+    .result-warning { background-color: #f9a825; color: #000; border: 1px solid #fbc02d; }
+    .result-danger { background-color: #b71c1c; color: #fff; border: 1px solid #ef5350; }
+    .error { background-color: #555; color: #fff; border: 1px solid #777; }
+
+    /* Neat checkbox grid that mimics your original alignment */
+    .checkbox-grid {
+      margin-top: 0.6rem;
+      display: grid;
+      /* three columns: checkbox + centered label + optional right label space */
+      grid-template-columns: 30px 1fr 30px;
+      gap: 0.35rem 1rem;
+      align-items: center;
+      background-color: #111;
+      padding: 0.75rem;
+      border-radius: 8px;
+    }
+
+    /* When a label needs to span two columns (so text doesn't wrap oddly) */
+    .checkbox-label {
+      grid-column: 2 / 3;
+      color: #e0e0e0;
+      font-size: 0.95rem;
+      line-height: 1.2;
+    }
+
+    /* Hide the extra right column content by default (keeps symmetry) */
+    .checkbox-right { grid-column: 3 / 4; color: transparent; }
+
+    /* Make checkboxes slightly bigger and colored */
+    .checkbox-grid input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      transform: scale(1.02);
+      accent-color: #00bcd4;
+      margin: 0;
+      justify-self: center;
+    }
+
+    /* Keep "other" input tidy */
+    #otherSymptom {
+      margin-top: 0.6rem;
       display: none;
     }
 
-    .error {
-      background-color: #555;
-      color: #fff;
-      border: 1px solid #777;
+    /* Map overlay (demo Leaflet map) */
+    #mapContainer {
+      display: none;
+      position: fixed;
+      top: 6%;
+      left: 5%;
+      right: 5%;
+      bottom: 6%;
+      background: #111;
+      z-index: 100;
+      padding: 0.6rem;
+      border-radius: 8px;
     }
-
-    .warning {
-      background-color: #999;
-      color: #000;
-      border: 1px solid #aaa;
-    }
-
-    .success {
-      background-color: #ccc;
-      color: #000;
-      border: 1px solid #aaa;
-    }
+    #map { width: 100%; height: 100%; border-radius: 6px; overflow: hidden; }
+    #closeMap { margin-top: 8px; width: auto; padding: 0.6rem 1rem; }
   </style>
 </head>
 <body>
   <header>Dengue Tracker</header>
 
+  <!-- LOGIN / SIGNUP CONTAINER (kept intact) -->
   <div class="container" id="formContainer">
     <!-- Login Form -->
     <div id="loginForm">
@@ -242,7 +263,7 @@
 
   <!-- MAIN PAGE -->
   <div id="mainPage">
-    <header><h1>Dengue Tracker</h1></header>
+    <header><h1 style="margin:0; padding:12px 0;">Dengue Tracker</h1></header>
     <main>
       <p>Enter your location and symptoms to check if you might have dengue and track dengue cases.</p>
 
@@ -250,103 +271,208 @@
       <input type="text" id="location" placeholder="Enter your location" />
 
       <label for="symptoms">Select symptoms you have:</label>
-      <select id="symptoms" multiple size="7" onchange="handleNoneOption()">
-        <option value="none">None</option>
-        <option value="fever">High Fever</option>
-        <option value="headache">Severe Headache</option>
-        <option value="pain">Pain behind eyes</option>
-        <option value="rash">Skin Rash</option>
-        <option value="bleed">Bleeding (nose or gums)</option>
-        <option value="other">Other (specify below)</option>
-      </select>
+
+      <!-- Clean grid that visually aligns like your original layout -->
+      <div class="checkbox-grid" id="symptomCheckboxes">
+        <!-- Row 1 -->
+        <input type="checkbox" id="c-none" value="none" onchange="handleNoneCheckbox(this)">
+        <div class="checkbox-label"><label for="c-none">None</label></div>
+        <div class="checkbox-right"></div>
+
+        <!-- Row 2 -->
+        <input type="checkbox" id="c-fever" value="fever">
+        <div class="checkbox-label"><label for="c-fever">High Fever</label></div>
+        <div class="checkbox-right"></div>
+
+        <!-- Row 3 -->
+        <input type="checkbox" id="c-headache" value="headache">
+        <div class="checkbox-label"><label for="c-headache">Severe Headache</label></div>
+        <div class="checkbox-right"></div>
+
+        <!-- Row 4 -->
+        <input type="checkbox" id="c-pain" value="pain">
+        <div class="checkbox-label"><label for="c-pain">Pain behind eyes</label></div>
+        <div class="checkbox-right"></div>
+
+        <!-- Row 5 -->
+        <input type="checkbox" id="c-rash" value="rash">
+        <div class="checkbox-label"><label for="c-rash">Skin Rash</label></div>
+        <div class="checkbox-right"></div>
+
+        <!-- Row 6 -->
+        <input type="checkbox" id="c-bleed" value="bleed">
+        <div class="checkbox-label"><label for="c-bleed">Bleeding (nose or gums)</label></div>
+        <div class="checkbox-right"></div>
+
+        <!-- Row 7 -->
+        <input type="checkbox" id="c-fatigue" value="fatigue">
+        <div class="checkbox-label"><label for="c-fatigue">Extreme Fatigue</label></div>
+        <div class="checkbox-right"></div>
+
+        <!-- Row 8 -->
+        <input type="checkbox" id="c-vomiting" value="vomiting">
+        <div class="checkbox-label"><label for="c-vomiting">Nausea / Vomiting</label></div>
+        <div class="checkbox-right"></div>
+
+        <!-- Row 9 -->
+        <input type="checkbox" id="c-other" value="other" onchange="handleOtherOption(this)">
+        <div class="checkbox-label"><label for="c-other">Other (specify below)</label></div>
+        <div class="checkbox-right"></div>
+      </div>
 
       <input type="text" id="otherSymptom" placeholder="If other, please specify..." style="display:none;" />
 
       <button onclick="checkDengue()">Check Dengue Risk</button>
+      <button onclick="toggleMap()">View NCR Dengue Heat Map (Demo)</button>
+
       <div id="result"></div>
     </main>
   </div>
 
+  <!-- DEMO HEAT MAP OVERLAY (Leaflet) -->
+  <div id="mapContainer">
+    <div id="map"></div>
+    <div style="text-align:center; margin-top:8px;">
+      <button id="closeMap" onclick="toggleMap()">Close Map</button>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
   <script>
+    // keep login/signup behavior same as original
     function showSignup() {
       document.getElementById("loginForm").style.display = "none";
       document.getElementById("signupForm").style.display = "block";
     }
-
     function showLogin() {
       document.getElementById("signupForm").style.display = "none";
       document.getElementById("loginForm").style.display = "block";
     }
-
     function login(event) {
       event.preventDefault();
       document.getElementById("formContainer").style.display = "none";
-      document.querySelector("header").style.display = "none";
       document.getElementById("mainPage").style.display = "block";
+      window.scrollTo(0, 0);
     }
 
-    function handleNoneOption() {
-      const select = document.getElementById('symptoms');
-      const noneOption = select.options[0];
+    // Checkbox helpers
+    function handleNoneCheckbox(cb) {
+      // if 'None' checked -> uncheck others
+      if (cb.checked) {
+        const boxes = document.querySelectorAll('#symptomCheckboxes input[type="checkbox"]');
+        boxes.forEach(b => { if (b !== cb) b.checked = false; });
+        document.getElementById('otherSymptom').style.display = 'none';
+        document.getElementById('otherSymptom').value = '';
+      }
+    }
+    function handleOtherOption(cb) {
       const otherInput = document.getElementById('otherSymptom');
-      const otherOption = [...select.options].find(opt => opt.value === 'other');
-
-      if (noneOption.selected) {
-        for (let i = 1; i < select.options.length; i++) {
-          select.options[i].selected = false;
-        }
-      }
-
-      // Show/hide "Other" input field
-      if (otherOption.selected) {
-        otherInput.style.display = 'block';
-      } else {
-        otherInput.style.display = 'none';
-        otherInput.value = '';
-      }
+      otherInput.style.display = cb.checked ? 'block' : 'none';
+      if (!cb.checked) otherInput.value = '';
+      // uncheck 'none' if choosing other
+      if (cb.checked) document.getElementById('c-none').checked = false;
     }
 
+    // Dengue logic (uses CDC symptom list logic)
     function checkDengue() {
       const location = document.getElementById('location').value.trim();
-      const symptomsSelect = document.getElementById('symptoms');
-      const otherSymptom = document.getElementById('otherSymptom').value.trim();
-      const selectedSymptoms = [...symptomsSelect.options]
-        .filter(option => option.selected)
-        .map(option => option.value);
+      const checkboxes = Array.from(document.querySelectorAll('#symptomCheckboxes input[type="checkbox"]'));
+      const otherSymptom = document.getElementById('otherSymptom').value.trim().toLowerCase();
+      const selected = checkboxes.filter(cb => cb.checked).map(cb => cb.value);
 
       const resultDiv = document.getElementById('result');
       resultDiv.className = '';
+      resultDiv.style.display = 'block';
+
+      const dengueSymptoms = ["fever", "headache", "pain", "rash", "bleed", "fatigue", "vomiting"];
 
       if (!location) {
-        resultDiv.style.display = 'block';
-        resultDiv.classList.add('error');
-        resultDiv.textContent = 'Please enter a location.';
+        resultDiv.className = 'error';
+        resultDiv.textContent = "Please enter a location.";
         return;
       }
 
-      if (selectedSymptoms.length === 0) {
-        resultDiv.style.display = 'block';
-        resultDiv.classList.add('error');
-        resultDiv.textContent = 'Please select at least one symptom.';
+      if (selected.length === 0) {
+        resultDiv.className = 'error';
+        resultDiv.textContent = "Please select at least one symptom.";
         return;
       }
 
-      if (selectedSymptoms.includes('none')) {
-        resultDiv.classList.add('success');
-        resultDiv.textContent = `✔️ You reported no dengue symptoms. Stay safe and keep monitoring your health. Location: ${location}`;
-      } else if (selectedSymptoms.includes('other') && !otherSymptom) {
-        resultDiv.classList.add('error');
-        resultDiv.textContent = 'Please specify your other symptom.';
-      } else if (selectedSymptoms.length >= 3) {
-        resultDiv.classList.add('warning');
-        resultDiv.textContent = `⚠️ You exhibit several dengue symptoms. Please consult a healthcare professional immediately. Location: ${location}`;
+      if (selected.includes('none')) {
+        resultDiv.className = 'result-safe';
+        resultDiv.textContent = "✅ You don't have a detection for a symptom in dengue.";
+        return;
+      }
+
+      if (selected.includes('other') && !otherSymptom) {
+        resultDiv.className = 'error';
+        resultDiv.textContent = "Please specify your other symptom.";
+        return;
+      }
+
+      const matched = selected.filter(sym => dengueSymptoms.includes(sym));
+      const otherMatches = otherSymptom ? dengueSymptoms.some(s => otherSymptom.includes(s)) : false;
+      const totalMatches = matched.length + (otherMatches ? 1 : 0);
+
+      if (totalMatches >= 3) {
+        resultDiv.className = 'result-danger';
+        resultDiv.textContent = "🚨 We have detected a high possible dengue symptoms and we advice to check and consult a doctor immidietly";
+      } else if (totalMatches >= 1) {
+        resultDiv.className = 'result-warning';
+        resultDiv.textContent = "u have a possible dengue infection kindly consult a doctor to specify your symtpoms";
       } else {
-        resultDiv.classList.add('success');
-        resultDiv.textContent = `✔️ Your symptoms may not strongly indicate dengue. However, stay vigilant and monitor your health. Location: ${location}`;
+        resultDiv.className = 'result-safe';
+        resultDiv.textContent = "you dont have a detection for a symptoms in dengue";
       }
-
-      resultDiv.style.display = 'block';
     }
+
+    // Demo interactive map (Leaflet) - no API key required
+    let mapShown = false;
+    let mapObj = null;
+    function toggleMap() {
+      const mapContainer = document.getElementById('mapContainer');
+      if (!mapShown) {
+        mapContainer.style.display = 'block';
+        if (!mapObj) {
+          // initialize demo map centered on Metro Manila
+          mapObj = L.map('map').setView([14.6091, 121.0223], 11);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(mapObj);
+
+          // sample hotspots (demo)
+          const spots = [
+            { lat:14.676, lon:121.043, intensity:0.9, name:'Quezon City' },
+            { lat:14.5995, lon:120.9842, intensity:0.85, name:'Manila' },
+            { lat:14.5547, lon:121.0244, intensity:0.7, name:'Makati' },
+            { lat:14.5721, lon:121.045, intensity:0.6, name:'Mandaluyong' },
+            { lat:14.5503, lon:121.0369, intensity:0.55, name:'Taguig' }
+          ];
+
+          spots.forEach(s => {
+            const color = s.intensity > 0.8 ? '#d32f2f' : s.intensity > 0.65 ? '#f57c00' : '#fbc02d';
+            L.circle([s.lat, s.lon], {
+              color,
+              fillColor: color,
+              fillOpacity: 0.45,
+              radius: 2000 * s.intensity
+            }).addTo(mapObj).bindPopup(`<b>${s.name}</b><br/>Risk: ${Math.round(s.intensity*100)}%`);
+          });
+        } else {
+          mapObj.invalidateSize();
+        }
+      } else {
+        mapContainer.style.display = 'none';
+      }
+      mapShown = !mapShown;
+    }
+
+    function closeMap() { toggleMap(); }
+
+    // keep the page from hiding header initially
+    // (login is handled earlier when user submits the form)
   </script>
 </body>
 </html>
