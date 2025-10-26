@@ -129,37 +129,142 @@
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
     }
 
+    /* FULLSCREEN MAP */
     #mapContainer {
       display: none;
       position: fixed;
-      top: 6%;
-      left: 5%;
-      right: 5%;
-      bottom: 6%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: #111;
       z-index: 100;
-      padding: 0.6rem;
-      border-radius: 8px;
+      padding: 0;
+      border-radius: 0;
     }
 
-    #map { width: 100%; height: 100%; border-radius: 6px; overflow: hidden; }
+    #map { width: 100%; height: 100%; border-radius: 0; overflow: hidden; }
     #closeMap { margin-top: 8px; width: auto; padding: 0.6rem 1rem; }
+
+    #colorGuideOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      z-index: 200;
+    }
+
+    #colorGuidePopup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: #1e1e1e;
+      padding: 1.4rem 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.15);
+      color: #fff;
+      display: none;
+      text-align: left;
+      z-index: 201;
+      animation: fadeInUp 0.4s ease forwards;
+    }
+    #colorGuidePopup h3 {
+      text-align: center;
+      margin-bottom: 0.8rem;
+      font-size: 1.1rem;
+      border-bottom: 1px solid #333;
+      padding-bottom: 0.4rem;
+    }
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 6px 0;
+      font-size: 0.95rem;
+    }
+    .color-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .red { background: #d32f2f; }
+    .orange { background: #f57c00; }
+    .yellow { background: #fbc02d; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes slideOutLeft {
+      from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      to { transform: translate(-150%, -50%) scale(0.9); opacity: 0; }
+    }
+
+    /* Side mini legend (moved to left) */
+    #sideLegend {
+      position: fixed;
+      top: 40%;
+      left: 10px;
+      background: #1c1c1c;
+      border-radius: 0 12px 12px 0;
+      box-shadow: 0 0 10px rgba(255,255,255,0.08);
+      overflow: hidden;
+      display: none;
+      transition: width 0.3s ease;
+      z-index: 150;
+      width: 40px;
+    }
+
+    #sideLegend.expanded {
+      width: 150px;
+    }
+
+    #sideLegend .arrow {
+      background: #2a2a2a;
+      padding: 6px 10px;
+      cursor: pointer;
+      user-select: none;
+      text-align: center;
+    }
+
+    #sideLegend .side-colors {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 8px 12px;
+      gap: 6px;
+    }
+
+    #sideLegend .side-colors div {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #sideLegend .label {
+      font-size: 0.85rem;
+      color: #ddd;
+      display: none;
+    }
+
+    #sideLegend.expanded .label {
+      display: inline;
+    }
   </style>
 </head>
 <body>
   <header>Disease Tracker</header>
 
-  <!-- LOGIN PAGE -->
   <div class="container" id="formContainer">
     <div id="loginForm">
       <h2>Log In</h2>
       <form onsubmit="login(event)">
         <label for="login-username">Username</label>
         <input type="text" id="login-username" required />
-
         <label for="login-password">Password</label>
         <input type="password" id="login-password" required />
-
         <button type="submit">Log In</button>
       </form>
       <div class="toggle">Don’t have an account? <span onclick="showSignup()">Sign Up</span></div>
@@ -170,43 +275,34 @@
       <form>
         <label for="signup-username">Username</label>
         <input type="text" id="signup-username" required />
-
         <label for="signup-email">Email</label>
         <input type="email" id="signup-email" required />
-
         <label for="signup-location">Location</label>
         <input type="text" id="signup-location" required />
-
         <label for="signup-password">Password</label>
         <input type="password" id="signup-password" required />
-
         <button type="submit">Create Account</button>
       </form>
       <div class="toggle">Already have an account? <span onclick="showLogin()">Log In</span></div>
     </div>
   </div>
 
-  <!-- MAIN APP PAGE -->
   <div id="mainPage">
     <header><h1 style="margin:0;">Disease Tracker</h1></header>
     <main>
       <p>Enter your location and select a disease to view the NCR Disease Heat Map demo.</p>
-
       <label for="disease">Select Disease:</label>
       <select id="disease">
         <option value="dengue">Dengue</option>
         <option value="malaria">Malaria</option>
         <option value="lepto">Leptospirosis</option>
       </select>
-
       <label for="location">Location (City or Zip Code):</label>
       <input type="text" id="location" placeholder="Enter your location" />
-
       <button onclick="toggleMap()">View NCR Disease Heat Map (Demo)</button>
     </main>
   </div>
 
-  <!-- MAP -->
   <div id="mapContainer">
     <div id="map"></div>
     <div style="text-align:center; margin-top:8px;">
@@ -214,8 +310,24 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <div id="colorGuideOverlay"></div>
+  <div id="colorGuidePopup">
+    <h3>Disease Color Legend</h3>
+    <div class="color-row"><span class="color-box red"></span>Dengue</div>
+    <div class="color-row"><span class="color-box orange"></span>Leptospirosis</div>
+    <div class="color-row"><span class="color-box yellow"></span>Malaria</div>
+  </div>
 
+  <div id="sideLegend">
+    <div class="arrow">&#9664;</div>
+    <div class="side-colors">
+      <div><span class="color-box red"></span><span class="label">Dengue</span></div>
+      <div><span class="color-box orange"></span><span class="label">Lepto</span></div>
+      <div><span class="color-box yellow"></span><span class="label">Malaria</span></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
     function showSignup() { 
       document.getElementById("loginForm").style.display = "none"; 
@@ -254,6 +366,36 @@
       } else cont.style.display = 'none';
       mapShown = !mapShown;
     }
+
+    const overlay = document.getElementById("colorGuideOverlay");
+    const popup = document.getElementById("colorGuidePopup");
+    const sideLegend = document.getElementById("sideLegend");
+    const arrow = document.querySelector("#sideLegend .arrow");
+
+    const oldToggleMap = toggleMap;
+    toggleMap = function() {
+      oldToggleMap();
+      if (!mapShown) return;
+      overlay.style.display = "block";
+      popup.style.display = "block";
+    };
+
+    function closePopup() {
+      popup.style.animation = "slideOutLeft 0.4s ease forwards";
+      setTimeout(() => {
+        popup.style.display = "none";
+        overlay.style.display = "none";
+        sideLegend.style.display = "block";
+        arrow.innerHTML = "&#9654;"; // arrow faces right after animation
+      }, 400);
+    }
+    overlay.addEventListener("click", closePopup);
+
+    // Toggle expand/collapse labels on arrow click
+    arrow.addEventListener("click", () => {
+      sideLegend.classList.toggle("expanded");
+      arrow.innerHTML = sideLegend.classList.contains("expanded") ? "&#9664;" : "&#9654;";
+    });
   </script>
 </body>
 </html>
