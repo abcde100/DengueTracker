@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Disease Tracker</title>
 
-  <!-- Leaflet CSS -->
+  <!-- Leaflet CSS + Geocoder CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
   <style>
     body {
@@ -137,8 +138,6 @@
       background-color: #222;
     }
 
-    .hint { color: #aaa; font-size: 0.9rem; margin-top: 6px; text-align:center; }
-
     @keyframes fadeIn { from {opacity:0;transform:translateY(-10px);} to {opacity:1;transform:translateY(0);} }
 
     /* MAIN PAGE */
@@ -171,7 +170,6 @@
 
     #map { width: 100%; height: 100%; }
 
-    /* Minimal Back Button */
     #backBtn {
       position: absolute;
       top: 15px;
@@ -194,26 +192,6 @@
     }
 
     #backBtn:hover { background-color: #333; transform: scale(1.05); }
-
-    #miniAlert, #miniReport {
-      position: fixed;
-      left: 10px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 999;
-      display: none;
-      box-shadow: 0 0 8px rgba(255,255,255,0.3);
-    }
-
-    #miniAlert { top: 20%; background: #d32f2f; }
-    #miniReport { top: 28%; background: #f57c00; }
 
     #sideLegend {
       position: fixed;
@@ -263,9 +241,23 @@
     .red { background: #d32f2f; }
     .orange { background: #f57c00; }
     .yellow { background: #fbc02d; }
+
+    /* ✅ Make search bar visible on dark mode */
+    .leaflet-control-geocoder-form input {
+      background: #1a1a1a !important;
+      color: #fff !important;
+      border: 1px solid #444 !important;
+      padding: 6px 8px;
+      border-radius: 6px;
+      box-shadow: 0 0 4px rgba(255,255,255,0.2);
+    }
+
+    .leaflet-control-geocoder-form input::placeholder {
+      color: #ccc !important;
+      opacity: 0.9;
+    }
   </style>
 </head>
-
 <body>
 <header>Disease Tracker</header>
 
@@ -273,7 +265,7 @@
 <div class="container" id="formContainer">
   <div id="loginForm">
     <h2>Log In</h2>
-    <form id="loginFormElm" onsubmit="handleLogin(event)">
+    <form onsubmit="handleLogin(event)">
       <label>Username</label>
       <input type="text" id="loginUsername" required />
       <label>Password</label>
@@ -288,7 +280,7 @@
 
   <div id="signupForm" style="display:none;">
     <h2>Sign Up</h2>
-    <form id="signupFormElm" onsubmit="handleSignup(event)">
+    <form onsubmit="handleSignup(event)">
       <label>Username</label>
       <input type="text" id="signupUsername" required />
       <label>Email</label>
@@ -334,8 +326,6 @@
 <div id="mapContainer">
   <button id="backBtn" onclick="toggleMap()">⮜</button>
   <div id="map"></div>
-  <div id="miniAlert" title="High Risk!">!</div>
-  <div id="miniReport" title="Report Case">+</div>
   <div id="sideLegend">
     <div class="arrow">&#9664;</div>
     <div class="side-colors">
@@ -346,7 +336,9 @@
   </div>
 </div>
 
+<!-- SCRIPTS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 <script>
 function toggleVisibility(id, btn) {
   const f = document.getElementById(id);
@@ -369,7 +361,7 @@ function handleSignup(e){
   let users=loadUsers();
   if(users.find(u=>u.username.toLowerCase()===username.toLowerCase()))return alert("Username exists.");
   users.push({username,password:pass,email,location:loc});
-  saveUsers(users);alert("Account created! Please log in.");signupFormElm.reset();showLogin();
+  saveUsers(users);alert("Account created! Please log in.");signupForm.reset();showLogin();
 }
 
 function handleLogin(e){
@@ -391,50 +383,38 @@ function logout(){
 }
 
 /* ========== Map ========== */
-let mapShown=false,mapObj=null,reportData=[];
-const miniAlert=document.getElementById("miniAlert"),miniReport=document.getElementById("miniReport"),sideLegend=document.getElementById("sideLegend"),arrow=sideLegend.querySelector(".arrow");
-
-const metroLocations={
-  "manila":[14.5995,120.9842],"quezon city":[14.676,121.043],
-  "makati":[14.5547,121.0244],"pasig":[14.5764,121.0851],
-  "taguig":[14.5176,121.0509],"caloocan":[14.7566,121.0447],
-  "mandaluyong":[14.5836,121.0409],"pasay":[14.5378,120.9802]
-};
+let mapShown=false,mapObj=null;
+const sideLegend=document.getElementById("sideLegend"),arrow=sideLegend.querySelector(".arrow");
 
 function toggleMap(){
   const cont=document.getElementById("mapContainer");
   if(!mapShown){
-    cont.style.display="block";miniAlert.style.display="flex";miniReport.style.display="flex";
+    cont.style.display="block";
     if(!mapObj){
       mapObj=L.map("map").setView([14.6091,121.0223],11);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(mapObj);
+
+      // ✅ Working Search Bar
+      L.Control.geocoder({
+        defaultMarkGeocode: true,
+        placeholder: "Search location...",
+        errorMessage: "Location not found."
+      })
+      .on('markgeocode', function(e) {
+        const center = e.geocode.center;
+        mapObj.setView(center, 14);
+        L.marker(center).addTo(mapObj).bindPopup(e.geocode.name).openPopup();
+      })
+      .addTo(mapObj);
+
     } else mapObj.invalidateSize();
     sideLegend.style.display="block";
   } else {
-    cont.style.display="none";miniAlert.style.display="none";miniReport.style.display="none";sideLegend.style.display="none";
+    cont.style.display="none";sideLegend.style.display="none";
   }
   mapShown=!mapShown;
 }
 
-miniReport.onclick=()=>{
-  const disease=prompt("Disease (dengue/lepto/malaria):");if(!disease)return;
-  const loc=prompt("Enter Metro Manila City:");if(!loc)return;
-  let coords=metroLocations[loc.toLowerCase()]||[14.6091,121.0223];
-  let e=reportData.find(r=>r.lat==coords[0]&&r.lon==coords[1]&&r.type==disease);
-  e?e.count++:reportData.push({lat:coords[0],lon:coords[1],type:disease,count:1});
-  updateCircles();alert(`Reported ${disease} at ${loc}!`);
-}
-
-function updateCircles(){
-  if(!mapObj)return;
-  mapObj.eachLayer(l=>{if(l instanceof L.Circle)mapObj.removeLayer(l);});
-  reportData.forEach(r=>{
-    const c=r.type=="dengue"?"#d32f2f":r.type=="lepto"?"#f57c00":"#fbc02d";
-    L.circle([r.lat,r.lon],{color:c,fillColor:c,fillOpacity:0.4,radius:600}).addTo(mapObj).bindPopup(`${r.type.toUpperCase()} - ${r.count} case(s)`);
-  });
-}
-
-miniAlert.onclick=()=>alert("High risk area detected!");
 arrow.onclick=()=>sideLegend.classList.toggle("expanded");
 
 (function autoLogin(){
