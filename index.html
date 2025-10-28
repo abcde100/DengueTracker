@@ -129,7 +129,6 @@
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
     }
 
-    /* FULLSCREEN MAP */
     #mapContainer {
       display: none;
       position: fixed;
@@ -139,12 +138,90 @@
       bottom: 0;
       background: #111;
       z-index: 100;
-      padding: 0;
-      border-radius: 0;
     }
 
     #map { width: 100%; height: 100%; border-radius: 0; overflow: hidden; }
-    #closeMap { margin-top: 8px; width: auto; padding: 0.6rem 1rem; }
+
+    #mapSearch {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      background: #fff;
+      color: #333;
+      border: none;
+      border-radius: 24px;
+      padding: 10px 40px 10px 40px;
+      font-size: 15px;
+      width: 300px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+      background-size: 18px;
+      background-repeat: no-repeat;
+      background-position: 12px center;
+    }
+
+    #mapSearch:focus { box-shadow: 0 0 6px rgba(0,150,255,0.5); width: 320px; }
+
+    #miniAlert, #miniReport {
+      position: fixed;
+      left: 10px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 999;
+      display: none;
+      box-shadow: 0 0 8px rgba(255,255,255,0.3);
+    }
+
+    #miniAlert { top: 20%; background: #d32f2f; }
+    #miniReport { top: 28%; background: #f57c00; }
+
+    #sideLegend {
+      position: fixed;
+      top: 40%;
+      left: 10px;
+      background: #1c1c1c;
+      border-radius: 0 12px 12px 0;
+      box-shadow: 0 0 10px rgba(255,255,255,0.08);
+      overflow: hidden;
+      display: none;
+      transition: width 0.3s ease;
+      z-index: 150;
+      width: 40px;
+    }
+    #sideLegend.expanded { width: 150px; }
+    #sideLegend .arrow {
+      background: #2a2a2a;
+      padding: 6px 10px;
+      cursor: pointer;
+      text-align: center;
+    }
+    #sideLegend .side-colors {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 8px 12px;
+      gap: 6px;
+    }
+    #sideLegend .side-colors div {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #sideLegend .label {
+      font-size: 0.85rem;
+      color: #ddd;
+      display: none;
+    }
+    #sideLegend.expanded .label { display: inline; }
 
     #colorGuideOverlay {
       position: fixed;
@@ -170,29 +247,8 @@
       animation: fadeInUp 0.4s ease forwards;
     }
 
-    #colorGuidePopup h3 {
-      text-align: center;
-      margin-bottom: 0.8rem;
-      font-size: 1.1rem;
-      border-bottom: 1px solid #333;
-      padding-bottom: 0.4rem;
-    }
-
-    .color-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 6px 0;
-      font-size: 0.95rem;
-    }
-
-    .color-box {
-      width: 18px;
-      height: 18px;
-      border-radius: 4px;
-      display: inline-block;
-    }
-
+    .color-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+    .color-box { width: 18px; height: 18px; border-radius: 4px; display: inline-block; }
     .red { background: #d32f2f; }
     .orange { background: #f57c00; }
     .yellow { background: #fbc02d; }
@@ -202,126 +258,11 @@
       to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
 
-    @keyframes slideOutLeft {
-      from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-      to { transform: translate(-150%, -50%) scale(0.9); opacity: 0; }
-    }
-
-    /* Side mini legend */
-    #sideLegend {
-      position: fixed;
-      top: 40%;
-      left: 10px;
-      background: #1c1c1c;
-      border-radius: 0 12px 12px 0;
-      box-shadow: 0 0 10px rgba(255,255,255,0.08);
-      overflow: hidden;
-      display: none;
-      transition: width 0.3s ease;
-      z-index: 150;
-      width: 40px;
-    }
-
-    #sideLegend.expanded { width: 150px; }
-
-    #sideLegend .arrow {
-      background: #2a2a2a;
-      padding: 6px 10px;
-      cursor: pointer;
-      user-select: none;
-      text-align: center;
-    }
-
-    #sideLegend .side-colors {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 8px 12px;
-      gap: 6px;
-    }
-
-    #sideLegend .side-colors div {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    #sideLegend .label {
-      font-size: 0.85rem;
-      color: #ddd;
-      display: none;
-    }
-
-    #sideLegend.expanded .label { display: inline; }
-
-    /* Google Maps-like Search Bar */
-    #mapSearch {
-      position: absolute;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 999;
-      background: #fff;
-      color: #333;
-      border: none;
-      border-radius: 24px;
-      padding: 10px 40px 10px 40px;
-      font-size: 15px;
-      width: 300px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      outline: none;
-      transition: all 0.3s ease;
-      background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
-      background-size: 18px;
-      background-repeat: no-repeat;
-      background-position: 12px center;
-    }
-
-    #mapSearch:focus {
-      box-shadow: 0 0 6px rgba(0,150,255,0.5);
-      width: 320px;
-    }
-
-    /* Side mini icons for Report & High Risk */
-    #miniAlert {
-      position: fixed;
-      top: 20%;
-      left: 10px;
-      width: 40px;
-      height: 40px;
-      background: #d32f2f;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 999;
-      display: none;
-      box-shadow: 0 0 8px rgba(255,255,255,0.3);
-    }
-
-    #miniReport {
-      position: fixed;
-      top: 28%;
-      left: 10px;
-      width: 40px;
-      height: 40px;
-      background: #f57c00;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 999;
-      display: none;
-      box-shadow: 0 0 8px rgba(255,255,255,0.3);
-    }
+    /* small helper for messages */
+    .hint { color: #aaa; font-size: 0.9rem; margin-top: 6px; text-align:center; }
   </style>
 </head>
+
 <body>
 <header>Disease Tracker</header>
 
@@ -329,36 +270,39 @@
 <div class="container" id="formContainer">
   <div id="loginForm">
     <h2>Log In</h2>
-    <form onsubmit="login(event)">
+    <form id="loginFormElm" onsubmit="handleLogin(event)">
       <label>Username</label>
-      <input type="text" required />
+      <input type="text" id="loginUsername" required />
       <label>Password</label>
-      <input type="password" required />
+      <input type="password" id="loginPassword" required minlength="8" />
       <button type="submit">Log In</button>
     </form>
     <div class="toggle">Don’t have an account? <span onclick="showSignup()">Sign Up</span></div>
+    <div class="hint">Only registered username/password combinations can open the app.</div>
   </div>
 
-  <div id="signupForm" style="display: none;">
+  <div id="signupForm" style="display:none;">
     <h2>Sign Up</h2>
-    <form>
+    <form id="signupFormElm" onsubmit="handleSignup(event)">
       <label>Username</label>
-      <input type="text" required />
+      <input type="text" id="signupUsername" required />
       <label>Email</label>
-      <input type="email" required />
+      <input type="email" id="signupEmail" required />
       <label>Location</label>
-      <input type="text" required />
+      <input type="text" id="signupLocation" required />
       <label>Password</label>
-      <input type="password" required />
+      <input type="password" id="password" minlength="8" required />
+      <label>Re-enter Password</label>
+      <input type="password" id="confirmPassword" minlength="8" required />
       <button type="submit">Create Account</button>
     </form>
     <div class="toggle">Already have an account? <span onclick="showLogin()">Log In</span></div>
+    <div class="hint">Password must be at least 8 characters.</div>
   </div>
 </div>
 
 <!-- MAIN PAGE -->
 <div id="mainPage">
-  <header><h1 style="margin:0;">Disease Tracker</h1></header>
   <main>
     <p>Enter your location and select a disease to view the NCR Disease Heat Map demo.</p>
     <label>Select Disease:</label>
@@ -370,6 +314,9 @@
     <label>Location (City or Zip Code):</label>
     <input type="text" id="location" placeholder="Enter your location" />
     <button onclick="toggleMap()">View NCR Disease Heat Map (Demo)</button>
+    <div style="margin-top:12px;">
+      <button onclick="logout()" style="background:#4a4a4a;">Log out</button>
+    </div>
   </main>
 </div>
 
@@ -377,11 +324,6 @@
 <div id="mapContainer">
   <input type="text" id="mapSearch" placeholder="Search city, barangay, or street..." />
   <div id="map"></div>
-  <div style="text-align:center; margin-top:8px;">
-    <button id="closeMap" onclick="toggleMap()">Close Map</button>
-  </div>
-
-  <!-- Side mini icons -->
   <div id="miniAlert" title="High Risk!">!</div>
   <div id="miniReport" title="Report Case">+</div>
 </div>
@@ -407,17 +349,108 @@
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-function showSignup() { document.getElementById("loginForm").style.display="none"; document.getElementById("signupForm").style.display="block"; }
-function showLogin() { document.getElementById("signupForm").style.display="none"; document.getElementById("loginForm").style.display="block"; }
-function login(e){ e.preventDefault(); document.getElementById("formContainer").style.display="none"; document.getElementById("mainPage").style.display="block"; window.scrollTo(0,0); }
+/* ---------- Simple client-side user storage ----------
+   - Users are stored in localStorage under "diseaseTrackerUsers" as an array:
+     [{ username, password, email, location }, ...]
+   - This is only for demo purposes. Do NOT use for real auth.
+-----------------------------------------------------*/
 
-let mapShown=false, mapObj=null, reportData=[]; 
-const miniAlert=document.getElementById("miniAlert"), miniReport=document.getElementById("miniReport");
+// Helpers for localStorage
+function loadUsers() {
+  try {
+    return JSON.parse(localStorage.getItem('diseaseTrackerUsers') || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+function saveUsers(users) {
+  localStorage.setItem('diseaseTrackerUsers', JSON.stringify(users));
+}
 
-const metroLocations = {
-  "manila":[14.5995,120.9842], "quezon city":[14.676,121.043], "makati":[14.5547,121.0244], 
-  "pasig":[14.5764,121.0851], "taguig":[14.5176,121.0509], "caloocan":[14.7566,121.0447],
-  "mandaluyong":[14.5836,121.0409], "pasay":[14.5378,120.9802]
+// UI toggles
+function showSignup(){
+  document.getElementById("loginForm").style.display="none";
+  document.getElementById("signupForm").style.display="block";
+}
+function showLogin(){
+  document.getElementById("signupForm").style.display="none";
+  document.getElementById("loginForm").style.display="block";
+}
+
+// Signup handler
+function handleSignup(e){
+  e.preventDefault();
+  const username = document.getElementById('signupUsername').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const location = document.getElementById('signupLocation').value.trim();
+  const pass = document.getElementById('password').value;
+  const confirm = document.getElementById('confirmPassword').value;
+
+  if (pass.length < 8) { alert('Password must be at least 8 characters.'); return; }
+  if (pass !== confirm) { alert('Passwords do not match.'); return; }
+  if (!username) { alert('Username required.'); return; }
+
+  const users = loadUsers();
+  if (users.find(u => u.username.toLowerCase() === username.toLowerCase())) {
+    alert('Username already exists. Choose another.');
+    return;
+  }
+
+  users.push({ username, password: pass, email, location });
+  saveUsers(users);
+
+  alert('Account created successfully! You may now log in.');
+  // switch to login form and clear signup fields
+  document.getElementById('signupFormElm')?.reset?.();
+  showLogin();
+}
+
+// Login handler
+function handleLogin(e){
+  e.preventDefault();
+  const username = document.getElementById('loginUsername').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+
+  const users = loadUsers();
+  const found = users.find(u => u.username === username && u.password === pass);
+  if (!found) {
+    alert('Invalid username or password. Only registered accounts can open the app.');
+    return;
+  }
+
+  // Successful login
+  document.getElementById('loginFormElm')?.reset?.();
+  openMainForUser(found);
+}
+
+// Open main app for the authenticated user
+function openMainForUser(user){
+  document.getElementById('formContainer').style.display = 'none';
+  document.getElementById('mainPage').style.display = 'block';
+  // optionally show logged-in username somewhere (not requested) - we won't show it to keep UI unchanged
+  window.scrollTo(0,0);
+  // store current user (for potential future features)
+  localStorage.setItem('diseaseTrackerCurrentUser', JSON.stringify({ username: user.username }));
+}
+
+// Logout
+function logout(){
+  localStorage.removeItem('diseaseTrackerCurrentUser');
+  // hide main and show login
+  document.getElementById('mainPage').style.display = 'none';
+  document.getElementById('formContainer').style.display = 'block';
+  showLogin();
+}
+
+/* ========== Existing map UI logic ========== */
+let mapShown=false,mapObj=null,reportData=[];
+const miniAlert=document.getElementById("miniAlert"),miniReport=document.getElementById("miniReport");
+const sideLegend=document.getElementById("sideLegend"),arrow=document.querySelector("#sideLegend .arrow");
+
+const metroLocations={
+  "manila":[14.5995,120.9842],"quezon city":[14.676,121.043],"makati":[14.5547,121.0244],
+  "pasig":[14.5764,121.0851],"taguig":[14.5176,121.0509],"caloocan":[14.7566,121.0447],
+  "mandaluyong":[14.5836,121.0409],"pasay":[14.5378,120.9802]
 };
 
 function toggleMap(){
@@ -426,76 +459,83 @@ function toggleMap(){
     cont.style.display="block";
     miniAlert.style.display="flex";
     miniReport.style.display="flex";
-
     if(!mapObj){
       mapObj=L.map("map").setView([14.6091,121.0223],11);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(mapObj);
 
-      mapObj.on('click', function(e){
-        mapObj.openPopup(L.popup()
-          .setLatLng(e.latlng)
+      mapObj.on('click',e=>{
+        L.popup().setLatLng(e.latlng)
           .setContent(`<b>Pin Location</b><br/>Lat: ${e.latlng.lat.toFixed(5)}, Lng: ${e.latlng.lng.toFixed(5)}`)
-          .openOn(mapObj)
-        );
+          .openOn(mapObj);
       });
     } else mapObj.invalidateSize();
+    sideLegend.style.display="block";
   } else {
     cont.style.display="none";
     miniAlert.style.display="none";
     miniReport.style.display="none";
+    sideLegend.style.display="none";
   }
   mapShown=!mapShown;
 }
 
-// MINI REPORT BUTTON
-miniReport.addEventListener("click", ()=>{
-  const disease = prompt("Select Disease Type: dengue, lepto, malaria");
-  if(!disease) return;
-  const location = prompt("Enter Barangay or Street (Metro Manila):");
-  if(!location) return;
-
-  let coords = metroLocations[location.toLowerCase()] || [14.6091,121.0223];
-  // Count existing reports at same coords
-  let existing = reportData.find(r => r.lat.toFixed(3)==coords[0].toFixed(3) && r.lon.toFixed(3)==coords[1].toFixed(3) && r.type==disease);
-  if(existing) { existing.count++; } else { reportData.push({lat:coords[0],lon:coords[1],type:disease,count:1}); }
-
+miniReport.addEventListener("click",()=>{
+  const disease=prompt("Select Disease Type: dengue, lepto, malaria");
+  if(!disease)return;
+  const location=prompt("Enter Barangay or City (Metro Manila):");
+  if(!location)return;
+  let coords=metroLocations[location.toLowerCase()]||[14.6091,121.0223];
+  let existing=reportData.find(r=>r.lat.toFixed(3)==coords[0].toFixed(3)&&r.lon.toFixed(3)==coords[1].toFixed(3)&&r.type==disease);
+  if(existing){existing.count++;}else{reportData.push({lat:coords[0],lon:coords[1],type:disease,count:1});}
   updateMapCircles();
-  mapObj.setView(coords, 13);
+  mapObj.setView(coords,13);
   alert(`Reported ${disease} case at ${location}!`);
 });
 
-// Update all circles
 function updateMapCircles(){
-  mapObj.eachLayer(l=>{
-    if(l instanceof L.Circle) mapObj.removeLayer(l);
-  });
+  if(!mapObj) return;
+  mapObj.eachLayer(l=>{ if(l instanceof L.Circle) mapObj.removeLayer(l); });
   reportData.forEach(r=>{
-    const color = r.type=="dengue"?"#d32f2f":r.type=="lepto"?"#f57c00":"#fbc02d";
-    L.circle([r.lat,r.lon],{color:color,fillColor:color,fillOpacity:0.3+0.1*r.count,radius:500})
+    const color=r.type=="dengue"?"#d32f2f":r.type=="lepto"?"#f57c00":"#fbc02d";
+    L.circle([r.lat,r.lon],{color,fillColor:color,fillOpacity:0.3+0.1*r.count,radius:500})
       .addTo(mapObj)
       .bindPopup(`<b>${r.type.toUpperCase()}</b><br/>Cases: ${r.count}<br/>Risk: ${Math.min(100,r.count*20)}%`);
   });
 }
 
-// MINI ALERT
 miniAlert.addEventListener("click",()=>alert("High risk area in Metro Manila!"));
+arrow.addEventListener("click",()=>sideLegend.classList.toggle("expanded"));
 
-const overlay=document.getElementById("colorGuideOverlay"), popup=document.getElementById("colorGuidePopup"), sideLegend=document.getElementById("sideLegend"), arrow=document.querySelector("#sideLegend .arrow");
-const oldToggleMap=toggleMap;
-toggleMap=function(){ oldToggleMap(); if(!mapShown) return; overlay.style.display="block"; popup.style.display="block"; };
-function closePopup(){ popup.style.animation="slideOutLeft 0.4s ease forwards"; setTimeout(()=>{popup.style.display="none"; overlay.style.display="none"; sideLegend.style.display="block"; arrow.innerHTML="&#9654;"; },400);}
-overlay.addEventListener("click", closePopup);
-arrow.addEventListener("click", ()=>{ sideLegend.classList.toggle("expanded"); arrow.innerHTML=sideLegend.classList.contains("expanded")?"&#9664;":"&#9654;"; });
+const overlay=document.getElementById("colorGuideOverlay"),popup=document.getElementById("colorGuidePopup");
+sideLegend.addEventListener("dblclick",()=>{overlay.style.display="block";popup.style.display="block";});
+overlay.addEventListener("click",()=>{popup.style.display="none";overlay.style.display="none";});
 
-// SEARCH BAR WITH AUTOCOMPLETE
-document.getElementById("mapSearch").addEventListener("keypress", (e)=>{
-  if(e.key=="Enter"){
-    const query=e.target.value.trim().toLowerCase();
-    const coords=metroLocations[query];
-    if(coords) mapObj.setView(coords,13);
-    else alert("Location not found in Metro Manila database.");
+document.getElementById("mapSearch").addEventListener("keypress",function(e){
+  if(e.key==="Enter"){
+    e.preventDefault();
+    const val=this.value.trim().toLowerCase();
+    if(!val)return;
+    let coords=metroLocations[val];
+    if(coords){
+      if(!mapObj) { toggleMap(); } // ensure map exists
+      mapObj.setView(coords,13);
+      L.popup().setLatLng(coords).setContent("Centered on "+val.toUpperCase()).openOn(mapObj);
+    }
+    else alert("Location not recognized (Demo only supports NCR cities).");
   }
 });
+
+// Auto-open main if previously logged in (optional convenience)
+(function tryAutoLogin(){
+  const cur = localStorage.getItem('diseaseTrackerCurrentUser');
+  if (cur) {
+    const parsed = JSON.parse(cur);
+    const users = loadUsers();
+    const found = users.find(u => u.username === parsed.username);
+    if (found) openMainForUser(found);
+    else localStorage.removeItem('diseaseTrackerCurrentUser');
+  }
+})();
 </script>
 </body>
 </html>
