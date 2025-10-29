@@ -10,12 +10,13 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
   <style>
+    /* ===== General Green & White Theme ===== */
     body {
       margin: 0;
       padding: 0;
       font-family: "Segoe UI", Arial, sans-serif;
-      background-color: #0f0f0f;
-      color: #e0e0e0;
+      background: radial-gradient(circle, #f8fff9, #e9f7ee);
+      color: #0f5132;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -27,32 +28,32 @@
       position: absolute;
       top: 0;
       width: 100%;
-      background-color: #1a1a1a;
-      color: #f5f5f5;
+      background-color: #0f5132;
+      color: #ffffff;
       text-align: center;
       padding: 1rem 0;
       font-size: 1.8rem;
       font-weight: bold;
       letter-spacing: 2px;
       text-transform: uppercase;
-      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       user-select: none;
       z-index: 50;
     }
 
     .container {
-      background-color: #1c1c1c;
+      background-color: #ffffff;
       padding: 2rem 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
-      width: 340px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 128, 85, 0.15);
+      width: 360px;
       animation: fadeIn 0.6s ease;
-      margin-top: 4.2rem;
+      margin-top: 5.2rem;
     }
 
     h2 {
       text-align: center;
-      color: #f0f0f0;
+      color: #0f5132;
       font-weight: 600;
       margin-bottom: 1.5rem;
     }
@@ -60,8 +61,8 @@
     label {
       display: block;
       margin-top: 1rem;
-      font-weight: bold;
-      color: #ccc;
+      font-weight: 600;
+      color: #1e3d29;
     }
 
     input, select, button {
@@ -69,17 +70,17 @@
       padding: 0.7rem;
       margin-top: 0.4rem;
       border-radius: 8px;
-      border: 1px solid #333;
-      background-color: #111;
-      color: #f5f5f5;
+      border: 1px solid #cde3d6;
+      background-color: #f9fffb;
+      color: #0f5132;
       box-sizing: border-box;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     input:focus, select:focus {
       outline: none;
-      border-color: #888;
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+      border-color: #198754;
+      box-shadow: 0 0 6px rgba(25, 135, 84, 0.3);
     }
 
     button {
@@ -87,25 +88,45 @@
       padding: 0.8rem;
       border-radius: 8px;
       border: none;
-      background-color: #2d2d2d;
-      color: #f5f5f5;
+      background-color: #198754;
+      color: #ffffff;
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.18s ease, transform 0.12s ease;
+      transition: background-color 0.2s ease, transform 0.1s ease;
     }
 
-    button:hover { background-color: #3a3a3a; transform: translateY(-2px); }
+    button:hover {
+      background-color: #157347;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background-color: #ffffff;
+      border: 2px solid #198754;
+      color: #198754;
+    }
+
+    .btn-outline:hover {
+      background-color: #198754;
+      color: #ffffff;
+    }
 
     .toggle {
       text-align: center;
       margin-top: 1rem;
       font-size: 0.9rem;
-      color: #aaa;
+      color: #198754;
     }
 
-    .toggle span { color: #fff; cursor: pointer; font-weight: bold; text-decoration: underline; }
-    .toggle span:hover { color: #ccc; }
+    .toggle span {
+      color: #0b5836;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .toggle span:hover { color: #157347; }
 
     .password-wrapper {
       position: relative;
@@ -120,12 +141,12 @@
       right: 6px;
       background: transparent;
       border: none;
-      color: #777;
-      font-size: 10px;
+      color: #555;
+      font-size: 12px;
       cursor: pointer;
       padding: 2px;
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -134,48 +155,63 @@
     }
 
     .toggle-password:hover {
-      color: #fff;
-      background-color: #222;
+      color: #198754;
+      background-color: #ecf9f0;
+    }
+
+    .terms {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #6b6b6b;
+      margin-top: 1rem;
+    }
+
+    .terms a {
+      color: #198754;
+      text-decoration: none;
+    }
+
+    .terms a:hover {
+      text-decoration: underline;
     }
 
     @keyframes fadeIn { from {opacity:0;transform:translateY(-10px);} to {opacity:1;transform:translateY(0);} }
 
-    /* MAIN PAGE */
+    /* Main Page */
     #mainPage {
       display: none;
       width: 100%;
       min-height: 100vh;
-      background-color: #121212;
-      color: #e0e0e0;
+      background-color: #f5fff7;
+      color: #0f5132;
       padding-top: 4.6rem;
     }
 
     main {
       margin: 2rem auto;
       max-width: 600px;
-      background: #1e1e1e;
+      background: #ffffff;
       padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
-      text-align:center;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0, 128, 85, 0.1);
+      text-align: center;
     }
 
     #mapContainer {
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: #111;
+      background: #f8fff9;
       z-index: 100;
     }
 
     #map { width: 100%; height: 100%; }
 
-    /* ✅ Updated back button styling */
     #backBtn {
       position: absolute;
       bottom: 20px;
       left: 20px;
-      background-color: #222;
+      background-color: #198754;
       color: #fff;
       border: none;
       width: 55px;
@@ -184,7 +220,7 @@
       cursor: pointer;
       font-size: 1.5rem;
       font-weight: bold;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 10px rgba(25, 135, 84, 0.3);
       z-index: 1000;
       transition: background-color 0.2s ease, transform 0.1s ease;
       display: flex;
@@ -192,15 +228,15 @@
       justify-content: center;
     }
 
-    #backBtn:hover { background-color: #333; transform: scale(1.08); }
+    #backBtn:hover { background-color: #157347; transform: scale(1.08); }
 
     #sideLegend {
       position: fixed;
       top: 40%;
       left: 10px;
-      background: #1c1c1c;
+      background: #ffffff;
       border-radius: 0 12px 12px 0;
-      box-shadow: 0 0 10px rgba(255,255,255,0.08);
+      box-shadow: 0 0 10px rgba(25,135,84,0.2);
       overflow: hidden;
       display: none;
       transition: width 0.3s ease;
@@ -210,7 +246,8 @@
 
     #sideLegend.expanded { width: 150px; }
     #sideLegend .arrow {
-      background: #2a2a2a;
+      background: #198754;
+      color: white;
       padding: 6px 10px;
       cursor: pointer;
       text-align: center;
@@ -232,7 +269,7 @@
 
     #sideLegend .label {
       font-size: 0.85rem;
-      color: #ddd;
+      color: #198754;
       display: none;
     }
 
@@ -242,20 +279,6 @@
     .red { background: #d32f2f; }
     .orange { background: #f57c00; }
     .yellow { background: #fbc02d; }
-
-    .leaflet-control-geocoder-form input {
-      background: #1a1a1a !important;
-      color: #fff !important;
-      border: 1px solid #444 !important;
-      padding: 6px 8px;
-      border-radius: 6px;
-      box-shadow: 0 0 4px rgba(255,255,255,0.2);
-    }
-
-    .leaflet-control-geocoder-form input::placeholder {
-      color: #ccc !important;
-      opacity: 0.9;
-    }
   </style>
 </head>
 <body>
@@ -264,7 +287,7 @@
 <!-- LOGIN / SIGNUP -->
 <div class="container" id="formContainer">
   <div id="loginForm">
-    <h2>Log In</h2>
+    <h2>Welcome Back</h2>
     <form onsubmit="handleLogin(event)">
       <label>Username</label>
       <input type="text" id="loginUsername" required />
@@ -275,11 +298,17 @@
       </div>
       <button type="submit">Log In</button>
     </form>
+    <button class="btn-outline" onclick="continueAsGuest()">Continue as Guest</button>
     <div class="toggle">Don’t have an account? <span onclick="showSignup()">Sign Up</span></div>
+    <p class="terms">
+      By continuing, you agree to our
+      <a href="#">Terms of Service</a> and
+      <a href="#">Privacy Policy</a>.
+    </p>
   </div>
 
   <div id="signupForm" style="display:none;">
-    <h2>Sign Up</h2>
+    <h2>Create Account</h2>
     <form onsubmit="handleSignup(event)">
       <label>Username</label>
       <input type="text" id="signupUsername" required />
@@ -317,7 +346,7 @@
     <input type="text" id="location" placeholder="Enter your location" />
     <button onclick="toggleMap()">View NCR Disease Heat Map (Demo)</button>
     <div style="margin-top:12px;">
-      <button onclick="logout()" style="background:#4a4a4a;">Log out</button>
+      <button onclick="logout()" style="background:#dc3545;">Log out</button>
     </div>
   </main>
 </div>
@@ -372,6 +401,11 @@ function handleLogin(e){
   openMain(found);
 }
 
+function continueAsGuest(){
+  const guestUser={username:"Guest"};
+  openMain(guestUser);
+}
+
 function openMain(user){
   formContainer.style.display="none";mainPage.style.display="block";
   localStorage.setItem('diseaseTrackerCurrentUser',JSON.stringify(user));
@@ -417,7 +451,7 @@ arrow.onclick=()=>sideLegend.classList.toggle("expanded");
 
 (function autoLogin(){
   const cur=localStorage.getItem('diseaseTrackerCurrentUser');
-  if(cur){const u=JSON.parse(cur);const users=loadUsers();const found=users.find(x=>x.username===u.username);if(found)openMain(found);}
+  if(cur){const u=JSON.parse(cur);const users=loadUsers();const found=users.find(x=>x.username===u.username);if(found||u.username==="Guest")openMain(u);}
 })();
 </script>
 </body>
