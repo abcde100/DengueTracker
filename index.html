@@ -169,6 +169,22 @@
       accent-color: #198754;
     }
     .symptom-result { margin-top: 1rem; font-weight: bold; text-align: center; }
+
+    /* Report table styling */
+    #reportSection { margin-top: 1rem; text-align: left; }
+    #reportSection h3 { text-align: center; color: #0f5132; margin-bottom: 0.4rem; }
+    #reportTable {
+      width: 100%; border-collapse: collapse; margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+    #reportTable th, #reportTable td {
+      border: 1px solid #cde3d6;
+      padding: 8px;
+      text-align: center;
+    }
+    #reportTable th { background-color: #198754; color: #fff; }
+    #reportTable tbody tr:nth-child(even) { background-color: #f9fffb; }
+    .small-muted { font-size: 0.85rem; color: #6b6b6b; margin-top: 6px; }
   </style>
 </head>
 <body>
@@ -233,6 +249,20 @@
 
     <label>Location:</label>
     <input type="text" id="location" placeholder="Enter your location" />
+
+    <!-- Report submit is added inside each symptom template (below the symptomResult) -->
+    <!-- REPORT TABLE VISIBLE ALWAYS -->
+    <div id="reportSection">
+      <h3>Submitted Reports</h3>
+      <div class="small-muted" style="text-align:center;">(Saved locally in your browser — shared across users on this browser)</div>
+      <table id="reportTable">
+        <thead>
+          <tr><th>Disease</th><th>Location</th><th>Date</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
     <button onclick="toggleMap()">View NCR Disease Heat Map (Demo)</button>
     <div style="margin-top:12px;"><button onclick="logout()" style="background:#dc3545;">Log out</button></div>
   </main>
@@ -312,7 +342,9 @@ function updateSymptomChecker(){
         <label><input type="checkbox" class="symptom severe" value="rapid breathing"> Rapid breathing</label>
       </div>
       <button onclick="checkDisease('Dengue')">Check for Dengue Symptoms</button>
-      <div class="symptom-result" id="symptomResult"></div>`;
+      <div class="symptom-result" id="symptomResult"></div>
+      <div style="text-align:center;margin-top:8px;"><button onclick="submitDiseaseReport()">Submit Disease Report</button></div>
+      `;
   } else if(disease==="lepto"){
     html=`
       <h3>Leptospirosis Symptom Checker</h3>
@@ -333,7 +365,9 @@ function updateSymptomChecker(){
         <label><input type="checkbox" class="symptom severe" value="meningitis"> Meningitis</label>
       </div>
       <button onclick="checkDisease('Leptospirosis')">Check for Leptospirosis Symptoms</button>
-      <div class="symptom-result" id="symptomResult"></div>`;
+      <div class="symptom-result" id="symptomResult"></div>
+      <div style="text-align:center;margin-top:8px;"><button onclick="submitDiseaseReport()">Submit Disease Report</button></div>
+      `;
   } else if(disease==="malaria"){
     html=`
       <h3>Malaria Symptom Checker</h3>
@@ -354,7 +388,9 @@ function updateSymptomChecker(){
         <label><input type="checkbox" class="symptom severe" value="jaundice"> Jaundice</label>
       </div>
       <button onclick="checkDisease('Malaria')">Check for Malaria Symptoms</button>
-      <div class="symptom-result" id="symptomResult"></div>`;
+      <div class="symptom-result" id="symptomResult"></div>
+      <div style="text-align:center;margin-top:8px;"><button onclick="submitDiseaseReport()">Submit Disease Report</button></div>
+      `;
   }
   sc.innerHTML = html;
 }
@@ -380,6 +416,58 @@ function checkDisease(disease){
   }
 }
 
+/* ======= REPORT STORAGE + RENDERING (ADDED) ======= */
+function loadReports(){
+  try { return JSON.parse(localStorage.getItem('diseaseReports')||'[]'); } catch { return []; }
+}
+function saveReports(reports){
+  localStorage.setItem('diseaseReports', JSON.stringify(reports));
+}
+function renderReports(){
+  const tbody = document.querySelector("#reportTable tbody");
+  const reports = loadReports();
+  tbody.innerHTML = "";
+  if(!reports || reports.length === 0){
+    // show empty row to keep table visible
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td colspan="3" style="color:#6b6b6b;">No reports yet</td>`;
+    tbody.appendChild(tr);
+    return;
+  }
+  reports.forEach(r=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${escapeHtml(r.disease)}</td><td>${escapeHtml(r.location)}</td><td>${escapeHtml(r.date)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+// basic escape to avoid accidental HTML injection from saved strings
+function escapeHtml(text){
+  if(!text && text !== 0) return "";
+  return text.toString().replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[m]; });
+}
+
+function submitDiseaseReport(){
+  // Use currently selected disease and the location input
+  const disease = document.getElementById("disease").value;
+  const locInput = document.getElementById("location");
+  let location = locInput ? locInput.value.trim() : "";
+  if(!location){
+    // if empty, ask user to enter location (do not change existing layout)
+    const p = prompt("Please enter the location for the report (e.g., Barangay, City):");
+    if(p === null) return; // user cancelled
+    location = p.trim();
+  }
+  if(!location){
+    alert("Location is required to submit a report.");
+    return;
+  }
+  const reports = loadReports();
+  reports.push({ disease, location, date: new Date().toLocaleString() });
+  saveReports(reports);
+  alert("Report submitted successfully!");
+  renderReports();
+}
+
 /* ======= MAP ======= */
 let map;
 function toggleMap(){
@@ -394,6 +482,9 @@ function toggleMap(){
   }
 }
 document.querySelector("#sideLegend .arrow").addEventListener("click",()=>{document.getElementById("sideLegend").classList.toggle("expanded");});
+
+// render reports on load so table is always visible
+renderReports();
 </script>
 </body>
 </html>
