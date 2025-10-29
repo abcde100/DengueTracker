@@ -279,6 +279,20 @@
     .red { background: #d32f2f; }
     .orange { background: #f57c00; }
     .yellow { background: #fbc02d; }
+
+    /* Symptom checker styling */
+    .symptom-section {
+      margin-top: 1.5rem;
+      text-align: left;
+    }
+
+    .symptom-group { margin-bottom: 1rem; }
+
+    .symptom-result {
+      margin-top: 1rem;
+      font-weight: bold;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -342,6 +356,34 @@
       <option value="lepto">Leptospirosis</option>
       <option value="malaria">Malaria</option>
     </select>
+
+    <!-- ✅ DENGUE SYMPTOM CHECKER SECTION -->
+    <div class="symptom-section" id="symptomChecker">
+      <h3>Dengue Symptom Checker</h3>
+
+      <div class="symptom-group">
+        <strong>Common Symptoms:</strong><br>
+        <label><input type="checkbox" class="symptom" value="high fever"> High fever (40°C / 104°F)</label><br>
+        <label><input type="checkbox" class="symptom" value="headache"> Severe headache (pain behind eyes)</label><br>
+        <label><input type="checkbox" class="symptom" value="body aches"> Muscle, joint, or bone pain</label><br>
+        <label><input type="checkbox" class="symptom" value="rash"> Skin rash</label><br>
+        <label><input type="checkbox" class="symptom" value="nausea"> Nausea or vomiting</label><br>
+        <label><input type="checkbox" class="symptom" value="swollen glands"> Swollen glands</label>
+      </div>
+
+      <div class="symptom-group">
+        <strong>Less Common / Severe Symptoms:</strong><br>
+        <label><input type="checkbox" class="symptom severe" value="fatigue"> Fatigue / restlessness</label><br>
+        <label><input type="checkbox" class="symptom severe" value="bleeding"> Bleeding gums / nosebleeds</label><br>
+        <label><input type="checkbox" class="symptom severe" value="abdominal pain"> Severe abdominal pain</label><br>
+        <label><input type="checkbox" class="symptom severe" value="vomiting blood"> Vomiting blood / blood in stool</label><br>
+        <label><input type="checkbox" class="symptom severe" value="rapid breathing"> Rapid breathing</label>
+      </div>
+
+      <button onclick="checkDengue()">Check for Dengue Symptoms</button>
+      <div class="symptom-result" id="symptomResult"></div>
+    </div>
+
     <label>Location:</label>
     <input type="text" id="location" placeholder="Enter your location" />
     <button onclick="toggleMap()">View NCR Disease Heat Map (Demo)</button>
@@ -414,6 +456,27 @@ function openMain(user){
 function logout(){
   localStorage.removeItem('diseaseTrackerCurrentUser');
   mainPage.style.display="none";formContainer.style.display="block";showLogin();
+}
+
+/* DENGUE SYMPTOM DETECTION LOGIC */
+function checkDengue() {
+  const symptoms = document.querySelectorAll('.symptom:checked');
+  const severe = document.querySelectorAll('.symptom.severe:checked');
+  const result = document.getElementById('symptomResult');
+
+  if (symptoms.length === 0) {
+    result.style.color = "#198754";
+    result.textContent = "You don’t have a detection for a symptom in dengue.";
+    return;
+  }
+
+  if (severe.length > 0 || symptoms.length >= 4) {
+    result.style.color = "#d32f2f";
+    result.textContent = "We have detected a high possible dengue symptoms and we advise to check and consult a doctor immediately.";
+  } else if (symptoms.length > 0) {
+    result.style.color = "#f57c00";
+    result.textContent = "You have a possible dengue infection kindly consult a doctor to specify your symptoms.";
+  }
 }
 
 /* ========== Map ========== */
