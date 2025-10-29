@@ -51,248 +51,124 @@
       margin-top: 5.2rem;
     }
 
-    h2 {
-      text-align: center;
-      color: #0f5132;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
+    h2 { text-align: center; color: #0f5132; font-weight: 600; margin-bottom: 1.5rem; }
 
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 600;
-      color: #1e3d29;
-    }
+    label { display: block; margin-top: 1rem; font-weight: 600; color: #1e3d29; }
 
     input, select, button {
-      width: 100%;
-      padding: 0.7rem;
-      margin-top: 0.4rem;
-      border-radius: 8px;
-      border: 1px solid #cde3d6;
-      background-color: #f9fffb;
-      color: #0f5132;
+      width: 100%; padding: 0.7rem; margin-top: 0.4rem;
+      border-radius: 8px; border: 1px solid #cde3d6;
+      background-color: #f9fffb; color: #0f5132;
       box-sizing: border-box;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     input:focus, select:focus {
-      outline: none;
-      border-color: #198754;
-      box-shadow: 0 0 6px rgba(25, 135, 84, 0.3);
+      outline: none; border-color: #198754; box-shadow: 0 0 6px rgba(25, 135, 84, 0.3);
     }
 
     button {
-      margin-top: 1.2rem;
-      padding: 0.8rem;
-      border-radius: 8px;
-      border: none;
-      background-color: #198754;
-      color: #ffffff;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
+      margin-top: 1.2rem; padding: 0.8rem; border-radius: 8px; border: none;
+      background-color: #198754; color: #ffffff; font-size: 1rem;
+      font-weight: bold; cursor: pointer;
       transition: background-color 0.2s ease, transform 0.1s ease;
     }
 
-    button:hover {
-      background-color: #157347;
-      transform: translateY(-1px);
-    }
+    button:hover { background-color: #157347; transform: translateY(-1px); }
 
-    .btn-outline {
-      background-color: #ffffff;
-      border: 2px solid #198754;
-      color: #198754;
-    }
+    .btn-outline { background-color: #ffffff; border: 2px solid #198754; color: #198754; }
+    .btn-outline:hover { background-color: #198754; color: #ffffff; }
 
-    .btn-outline:hover {
-      background-color: #198754;
-      color: #ffffff;
-    }
-
-    .toggle {
-      text-align: center;
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #198754;
-    }
-
-    .toggle span {
-      color: #0b5836;
-      cursor: pointer;
-      font-weight: bold;
-      text-decoration: underline;
-    }
-
+    .toggle { text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #198754; }
+    .toggle span { color: #0b5836; cursor: pointer; font-weight: bold; text-decoration: underline; }
     .toggle span:hover { color: #157347; }
 
-    .password-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
+    .password-wrapper { position: relative; display: flex; align-items: center; }
     .password-wrapper input { padding-right: 2rem; }
 
     .toggle-password {
-      position: absolute;
-      right: 6px;
-      background: transparent;
-      border: none;
-      color: #555;
-      font-size: 12px;
-      cursor: pointer;
-      padding: 2px;
-      width: 22px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
+      position: absolute; right: 6px; background: transparent; border: none;
+      color: #555; font-size: 12px; cursor: pointer; padding: 2px; width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center; border-radius: 50%;
       transition: color 0.2s ease, background-color 0.2s ease;
     }
+    .toggle-password:hover { color: #198754; background-color: #ecf9f0; }
 
-    .toggle-password:hover {
-      color: #198754;
-      background-color: #ecf9f0;
-    }
-
-    .terms {
-      text-align: center;
-      font-size: 0.8rem;
-      color: #6b6b6b;
-      margin-top: 1rem;
-    }
-
-    .terms a {
-      color: #198754;
-      text-decoration: none;
-    }
-
-    .terms a:hover {
-      text-decoration: underline;
-    }
+    .terms { text-align: center; font-size: 0.8rem; color: #6b6b6b; margin-top: 1rem; }
+    .terms a { color: #198754; text-decoration: none; }
+    .terms a:hover { text-decoration: underline; }
 
     @keyframes fadeIn { from {opacity:0;transform:translateY(-10px);} to {opacity:1;transform:translateY(0);} }
 
-    /* Main Page */
-    #mainPage {
-      display: none;
-      width: 100%;
-      min-height: 100vh;
-      background-color: #f5fff7;
-      color: #0f5132;
-      padding-top: 4.6rem;
-    }
+    #mainPage { display: none; width: 100%; min-height: 100vh; background-color: #f5fff7; color: #0f5132; padding-top: 4.6rem; }
 
     main {
-      margin: 2rem auto;
-      max-width: 600px;
-      background: #ffffff;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0, 128, 85, 0.1);
-      text-align: center;
+      margin: 2rem auto; max-width: 600px; background: #ffffff;
+      padding: 2rem; border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0, 128, 85, 0.1); text-align: center;
     }
 
-    #mapContainer {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: #f8fff9;
-      z-index: 100;
-    }
-
+    #mapContainer { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #f8fff9; z-index: 100; }
     #map { width: 100%; height: 100%; }
 
     #backBtn {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      background-color: #198754;
-      color: #fff;
-      border: none;
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.5rem;
-      font-weight: bold;
+      position: absolute; bottom: 20px; left: 20px;
+      background-color: #198754; color: #fff; border: none;
+      width: 55px; height: 55px; border-radius: 50%; cursor: pointer;
+      font-size: 1.5rem; font-weight: bold;
       box-shadow: 0 0 10px rgba(25, 135, 84, 0.3);
       z-index: 1000;
       transition: background-color 0.2s ease, transform 0.1s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
-
     #backBtn:hover { background-color: #157347; transform: scale(1.08); }
 
     #sideLegend {
-      position: fixed;
-      top: 40%;
-      left: 10px;
-      background: #ffffff;
-      border-radius: 0 12px 12px 0;
+      position: fixed; top: 40%; left: 10px;
+      background: #ffffff; border-radius: 0 12px 12px 0;
       box-shadow: 0 0 10px rgba(25,135,84,0.2);
-      overflow: hidden;
-      display: none;
-      transition: width 0.3s ease;
-      z-index: 150;
-      width: 40px;
+      overflow: hidden; display: none; transition: width 0.3s ease;
+      z-index: 150; width: 40px;
     }
-
     #sideLegend.expanded { width: 150px; }
-    #sideLegend .arrow {
-      background: #198754;
-      color: white;
-      padding: 6px 10px;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    #sideLegend .side-colors {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 8px 12px;
-      gap: 6px;
-    }
-
-    #sideLegend .side-colors div {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    #sideLegend .label {
-      font-size: 0.85rem;
-      color: #198754;
-      display: none;
-    }
-
+    #sideLegend .arrow { background: #198754; color: white; padding: 6px 10px; cursor: pointer; text-align: center; }
+    #sideLegend .side-colors { display: flex; flex-direction: column; align-items: flex-start; padding: 8px 12px; gap: 6px; }
+    #sideLegend .side-colors div { display: flex; align-items: center; gap: 6px; }
+    #sideLegend .label { font-size: 0.85rem; color: #198754; display: none; }
     #sideLegend.expanded .label { display: inline; }
-
     .color-box { width: 18px; height: 18px; border-radius: 4px; }
     .red { background: #d32f2f; }
     .orange { background: #f57c00; }
     .yellow { background: #fbc02d; }
 
     /* Symptom checker styling */
-    .symptom-section {
-      margin-top: 1.5rem;
-      text-align: left;
+    .symptom-section { margin-top: 1.5rem; text-align: left; }
+    .symptom-group {
+      margin-bottom: 1rem;
+      padding: 0.8rem 1rem;
+      background-color: #f9fffb;
+      border-radius: 8px;
+      border: 1px solid #d6f0e2;
     }
-
-    .symptom-group { margin-bottom: 1rem; }
-
-    .symptom-result {
-      margin-top: 1rem;
-      font-weight: bold;
-      text-align: center;
+    .symptom-group strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #0f5132;
     }
+    .symptom-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 6px 0;
+      font-weight: normal;
+      color: #1e3d29;
+    }
+    .symptom-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #198754;
+    }
+    .symptom-result { margin-top: 1rem; font-weight: bold; text-align: center; }
   </style>
 </head>
 <body>
@@ -314,11 +190,7 @@
     </form>
     <button class="btn-outline" onclick="continueAsGuest()">Continue as Guest</button>
     <div class="toggle">Don’t have an account? <span onclick="showSignup()">Sign Up</span></div>
-    <p class="terms">
-      By continuing, you agree to our
-      <a href="#">Terms of Service</a> and
-      <a href="#">Privacy Policy</a>.
-    </p>
+    <p class="terms">By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
   </div>
 
   <div id="signupForm" style="display:none;">
@@ -351,45 +223,18 @@
   <main>
     <p>Enter your location and select a disease to view the NCR Disease Heat Map demo.</p>
     <label>Select Disease:</label>
-    <select id="disease">
+    <select id="disease" onchange="updateSymptomChecker()">
       <option value="dengue">Dengue</option>
       <option value="lepto">Leptospirosis</option>
       <option value="malaria">Malaria</option>
     </select>
 
-    <!-- ✅ DENGUE SYMPTOM CHECKER SECTION -->
-    <div class="symptom-section" id="symptomChecker">
-      <h3>Dengue Symptom Checker</h3>
-
-      <div class="symptom-group">
-        <strong>Common Symptoms:</strong><br>
-        <label><input type="checkbox" class="symptom" value="high fever"> High fever (40°C / 104°F)</label><br>
-        <label><input type="checkbox" class="symptom" value="headache"> Severe headache (pain behind eyes)</label><br>
-        <label><input type="checkbox" class="symptom" value="body aches"> Muscle, joint, or bone pain</label><br>
-        <label><input type="checkbox" class="symptom" value="rash"> Skin rash</label><br>
-        <label><input type="checkbox" class="symptom" value="nausea"> Nausea or vomiting</label><br>
-        <label><input type="checkbox" class="symptom" value="swollen glands"> Swollen glands</label>
-      </div>
-
-      <div class="symptom-group">
-        <strong>Less Common / Severe Symptoms:</strong><br>
-        <label><input type="checkbox" class="symptom severe" value="fatigue"> Fatigue / restlessness</label><br>
-        <label><input type="checkbox" class="symptom severe" value="bleeding"> Bleeding gums / nosebleeds</label><br>
-        <label><input type="checkbox" class="symptom severe" value="abdominal pain"> Severe abdominal pain</label><br>
-        <label><input type="checkbox" class="symptom severe" value="vomiting blood"> Vomiting blood / blood in stool</label><br>
-        <label><input type="checkbox" class="symptom severe" value="rapid breathing"> Rapid breathing</label>
-      </div>
-
-      <button onclick="checkDengue()">Check for Dengue Symptoms</button>
-      <div class="symptom-result" id="symptomResult"></div>
-    </div>
+    <div class="symptom-section" id="symptomChecker"></div>
 
     <label>Location:</label>
     <input type="text" id="location" placeholder="Enter your location" />
     <button onclick="toggleMap()">View NCR Disease Heat Map (Demo)</button>
-    <div style="margin-top:12px;">
-      <button onclick="logout()" style="background:#dc3545;">Log out</button>
-    </div>
+    <div style="margin-top:12px;"><button onclick="logout()" style="background:#dc3545;">Log out</button></div>
   </main>
 </div>
 
@@ -416,13 +261,10 @@ function toggleVisibility(id, btn) {
   f.type = f.type === "password" ? "text" : "password";
   btn.textContent = f.type === "password" ? "👁️" : "🙈";
 }
-
 function loadUsers(){try{return JSON.parse(localStorage.getItem('diseaseTrackerUsers')||'[]')}catch{return[]}}
 function saveUsers(u){localStorage.setItem('diseaseTrackerUsers',JSON.stringify(u))}
-
 function showSignup(){loginForm.style.display="none";signupForm.style.display="block";}
 function showLogin(){signupForm.style.display="none";loginForm.style.display="block";}
-
 function handleSignup(e){
   e.preventDefault();
   const username=signupUsername.value.trim(),email=signupEmail.value.trim(),loc=signupLocation.value.trim();
@@ -434,88 +276,124 @@ function handleSignup(e){
   users.push({username,password:pass,email,location:loc});
   saveUsers(users);alert("Account created! Please log in.");signupForm.reset();showLogin();
 }
-
 function handleLogin(e){
   e.preventDefault();
   const username=loginUsername.value.trim(),pass=loginPassword.value;
   const users=loadUsers();const found=users.find(u=>u.username===username&&u.password===pass);
-  if(!found)return alert("Invalid credentials.");
-  openMain(found);
+  if(!found)return alert("Invalid credentials.");openMain(found);
 }
+function continueAsGuest(){openMain({username:"Guest"});}
+function openMain(user){formContainer.style.display="none";mainPage.style.display="block";localStorage.setItem('diseaseTrackerCurrentUser',JSON.stringify(user));}
+function logout(){localStorage.removeItem('diseaseTrackerCurrentUser');mainPage.style.display="none";formContainer.style.display="block";showLogin();}
 
-function continueAsGuest(){
-  const guestUser={username:"Guest"};
-  openMain(guestUser);
-}
-
-function openMain(user){
-  formContainer.style.display="none";mainPage.style.display="block";
-  localStorage.setItem('diseaseTrackerCurrentUser',JSON.stringify(user));
-}
-
-function logout(){
-  localStorage.removeItem('diseaseTrackerCurrentUser');
-  mainPage.style.display="none";formContainer.style.display="block";showLogin();
-}
-
-/* DENGUE SYMPTOM DETECTION LOGIC */
-function checkDengue() {
-  const symptoms = document.querySelectorAll('.symptom:checked');
-  const severe = document.querySelectorAll('.symptom.severe:checked');
-  const result = document.getElementById('symptomResult');
-
-  if (symptoms.length === 0) {
-    result.style.color = "#198754";
-    result.textContent = "You don’t have a detection for a symptom in dengue.";
-    return;
+/* ======= SYMPTOM CHECKERS ======= */
+function updateSymptomChecker(){
+  const disease=document.getElementById("disease").value;
+  const sc=document.getElementById("symptomChecker");
+  let html="";
+  if(disease==="dengue"){
+    html=`
+      <h3>Dengue Symptom Checker</h3>
+      <div class="symptom-group">
+        <strong>Common Symptoms:</strong>
+        <label><input type="checkbox" class="symptom" value="fever"> High fever (40°C / 104°F)</label>
+        <label><input type="checkbox" class="symptom" value="headache"> Severe headache (pain behind eyes)</label>
+        <label><input type="checkbox" class="symptom" value="body aches"> Muscle, joint, or bone pain</label>
+        <label><input type="checkbox" class="symptom" value="rash"> Skin rash</label>
+        <label><input type="checkbox" class="symptom" value="nausea"> Nausea or vomiting</label>
+        <label><input type="checkbox" class="symptom" value="swollen glands"> Swollen glands</label>
+      </div>
+      <div class="symptom-group">
+        <strong>Severe Symptoms:</strong>
+        <label><input type="checkbox" class="symptom severe" value="fatigue"> Fatigue / restlessness</label>
+        <label><input type="checkbox" class="symptom severe" value="bleeding"> Bleeding gums / nosebleeds</label>
+        <label><input type="checkbox" class="symptom severe" value="abdominal pain"> Severe abdominal pain</label>
+        <label><input type="checkbox" class="symptom severe" value="vomiting blood"> Vomiting blood / blood in stool</label>
+        <label><input type="checkbox" class="symptom severe" value="rapid breathing"> Rapid breathing</label>
+      </div>
+      <button onclick="checkDisease('Dengue')">Check for Dengue Symptoms</button>
+      <div class="symptom-result" id="symptomResult"></div>`;
+  } else if(disease==="lepto"){
+    html=`
+      <h3>Leptospirosis Symptom Checker</h3>
+      <div class="symptom-group">
+        <strong>Common Symptoms:</strong>
+        <label><input type="checkbox" class="symptom" value="fever"> Sudden fever</label>
+        <label><input type="checkbox" class="symptom" value="headache"> Headache</label>
+        <label><input type="checkbox" class="symptom" value="chills"> Chills</label>
+        <label><input type="checkbox" class="symptom" value="muscle aches"> Muscle aches (calves and back)</label>
+        <label><input type="checkbox" class="symptom" value="cough"> Cough</label>
+        <label><input type="checkbox" class="symptom" value="red eyes"> Red eyes</label>
+        <label><input type="checkbox" class="symptom" value="rash"> Rash</label>
+      </div>
+      <div class="symptom-group">
+        <strong>Severe Symptoms:</strong>
+        <label><input type="checkbox" class="symptom severe" value="jaundice"> Jaundice (yellow skin/eyes)</label>
+        <label><input type="checkbox" class="symptom severe" value="kidney damage"> Kidney damage</label>
+        <label><input type="checkbox" class="symptom severe" value="meningitis"> Meningitis</label>
+      </div>
+      <button onclick="checkDisease('Leptospirosis')">Check for Leptospirosis Symptoms</button>
+      <div class="symptom-result" id="symptomResult"></div>`;
+  } else if(disease==="malaria"){
+    html=`
+      <h3>Malaria Symptom Checker</h3>
+      <div class="symptom-group">
+        <strong>Common Symptoms:</strong>
+        <label><input type="checkbox" class="symptom" value="fever"> Fever</label>
+        <label><input type="checkbox" class="symptom" value="chills"> Chills</label>
+        <label><input type="checkbox" class="symptom" value="sweating"> Sweating</label>
+        <label><input type="checkbox" class="symptom" value="headache"> Headache</label>
+        <label><input type="checkbox" class="symptom" value="nausea"> Nausea or vomiting</label>
+        <label><input type="checkbox" class="symptom" value="body aches"> Body aches</label>
+      </div>
+      <div class="symptom-group">
+        <strong>Severe Symptoms:</strong>
+        <label><input type="checkbox" class="symptom severe" value="confusion"> Confusion</label>
+        <label><input type="checkbox" class="symptom severe" value="seizures"> Seizures</label>
+        <label><input type="checkbox" class="symptom severe" value="difficulty breathing"> Difficulty breathing</label>
+        <label><input type="checkbox" class="symptom severe" value="jaundice"> Jaundice</label>
+      </div>
+      <button onclick="checkDisease('Malaria')">Check for Malaria Symptoms</button>
+      <div class="symptom-result" id="symptomResult"></div>`;
   }
-
-  if (severe.length > 0 || symptoms.length >= 4) {
-    result.style.color = "#d32f2f";
-    result.textContent = "We have detected a high possible dengue symptoms and we advise to check and consult a doctor immediately.";
-  } else if (symptoms.length > 0) {
-    result.style.color = "#f57c00";
-    result.textContent = "You have a possible dengue infection kindly consult a doctor to specify your symptoms.";
-  }
+  sc.innerHTML = html;
 }
+updateSymptomChecker();
 
-/* ========== Map ========== */
-let mapShown=false,mapObj=null;
-const sideLegend=document.getElementById("sideLegend"),arrow=sideLegend.querySelector(".arrow");
-
-function toggleMap(){
-  const cont=document.getElementById("mapContainer");
-  if(!mapShown){
-    cont.style.display="block";
-    if(!mapObj){
-      mapObj=L.map("map").setView([14.6091,121.0223],11);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(mapObj);
-
-      L.Control.geocoder({
-        defaultMarkGeocode: true,
-        placeholder: "Search location...",
-        errorMessage: "Location not found."
-      })
-      .on('markgeocode', function(e) {
-        const center = e.geocode.center;
-        mapObj.setView(center, 14);
-        L.marker(center).addTo(mapObj).bindPopup(e.geocode.name).openPopup();
-      })
-      .addTo(mapObj);
-    } else mapObj.invalidateSize();
-    sideLegend.style.display="block";
+function checkDisease(disease){
+  const checked = document.querySelectorAll("#symptomChecker .symptom:checked");
+  const severe = document.querySelectorAll("#symptomChecker .symptom.severe:checked");
+  const res = document.getElementById("symptomResult");
+  if(checked.length===0){
+    res.textContent="Please select your symptoms first.";
+    res.style.color="#d32f2f";return;
+  }
+  if(severe.length>0){
+    res.textContent=`Your symptoms indicate possible SEVERE ${disease}. Seek medical attention immediately.`;
+    res.style.color="#d32f2f";
+  } else if(checked.length>=3){
+    res.textContent=`Your symptoms match moderate signs of ${disease}. Monitor closely and consult a doctor.`;
+    res.style.color="#f57c00";
   } else {
-    cont.style.display="none";sideLegend.style.display="none";
+    res.textContent=`Your symptoms are mild. Continue to rest and observe.`;
+    res.style.color="#198754";
   }
-  mapShown=!mapShown;
 }
 
-arrow.onclick=()=>sideLegend.classList.toggle("expanded");
-
-(function autoLogin(){
-  const cur=localStorage.getItem('diseaseTrackerCurrentUser');
-  if(cur){const u=JSON.parse(cur);const users=loadUsers();const found=users.find(x=>x.username===u.username);if(found||u.username==="Guest")openMain(u);}
-})();
+/* ======= MAP ======= */
+let map;
+function toggleMap(){
+  const c=document.getElementById("mapContainer");
+  const s=document.getElementById("sideLegend");
+  if(c.style.display==="block"){c.style.display="none";s.style.display="none";return;}
+  c.style.display="block";s.style.display="flex";
+  if(!map){
+    map=L.map("map").setView([14.6091,121.0223],11);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    L.Control.geocoder().addTo(map);
+  }
+}
+document.querySelector("#sideLegend .arrow").addEventListener("click",()=>{document.getElementById("sideLegend").classList.toggle("expanded");});
 </script>
 </body>
 </html>
