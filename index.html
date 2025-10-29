@@ -170,20 +170,21 @@
 
     #map { width: 100%; height: 100%; }
 
+    /* ✅ Updated back button styling */
     #backBtn {
       position: absolute;
-      top: 15px;
-      right: 15px;
+      bottom: 20px;
+      left: 20px;
       background-color: #222;
       color: #fff;
       border: none;
-      width: 36px;
-      height: 36px;
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       font-weight: bold;
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
       z-index: 1000;
       transition: background-color 0.2s ease, transform 0.1s ease;
       display: flex;
@@ -191,7 +192,7 @@
       justify-content: center;
     }
 
-    #backBtn:hover { background-color: #333; transform: scale(1.05); }
+    #backBtn:hover { background-color: #333; transform: scale(1.08); }
 
     #sideLegend {
       position: fixed;
@@ -242,7 +243,6 @@
     .orange { background: #f57c00; }
     .yellow { background: #fbc02d; }
 
-    /* ✅ Make search bar visible on dark mode */
     .leaflet-control-geocoder-form input {
       background: #1a1a1a !important;
       color: #fff !important;
@@ -394,7 +394,6 @@ function toggleMap(){
       mapObj=L.map("map").setView([14.6091,121.0223],11);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(mapObj);
 
-      // ✅ Working Search Bar
       L.Control.geocoder({
         defaultMarkGeocode: true,
         placeholder: "Search location...",
@@ -406,7 +405,6 @@ function toggleMap(){
         L.marker(center).addTo(mapObj).bindPopup(e.geocode.name).openPopup();
       })
       .addTo(mapObj);
-
     } else mapObj.invalidateSize();
     sideLegend.style.display="block";
   } else {
